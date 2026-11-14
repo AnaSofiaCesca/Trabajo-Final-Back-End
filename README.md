@@ -6,7 +6,7 @@
 ## Stack
 - ASP.NET Core MVC (.NET 10)
 - EF Core 10.0.15 + SQL Server LocalDB
-- AutoMapper 14.0.0 (riesgo aceptado CVE-2026-32933, uso académico/local; ver .csproj)
+- AutoMapper 16.3.0
 
 ## Cómo correrlo
 dotnet restore
