@@ -1,11 +1,10 @@
 using AutoMapper;
 
-namespace TpFinal.Web.Mappings;
+namespace TpFinal.BL.Mappings;
 
 public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        // CreateMap<Entidad, EntidadDto>().ReverseMap();
     }
 }

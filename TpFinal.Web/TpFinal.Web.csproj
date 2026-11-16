@@ -7,12 +7,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="16.3.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.15">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\TpFinal.BL\TpFinal.BL.csproj" />
+	  <ProjectReference Include="..\TpFinal.DL\TpFinal.DL.csproj" />
 	</ItemGroup>
 
 </Project>
