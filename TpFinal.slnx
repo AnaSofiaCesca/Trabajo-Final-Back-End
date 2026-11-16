@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="TpFinal.BL/TpFinal.BL.csproj" />
   <Project Path="TpFinal.Core/TpFinal.Core.csproj" />
+  <Project Path="TpFinal.DL/TpFinal.DL.csproj" />
   <Project Path="TpFinal.Web/TpFinal.Web.csproj" />
 </Solution>
