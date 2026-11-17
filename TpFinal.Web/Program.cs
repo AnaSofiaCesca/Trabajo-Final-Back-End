@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TpFinal.BL.Mappings;
+using TpFinal.Core.Interfaces;
+using TpFinal.DL;
 using TpFinal.DL.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,11 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Repositorios y servicios (cuando existan):
-// builder.Services.AddScoped<IXxxRepository, XxxRepository>();
-// builder.Services.AddScoped<IXxxService, XxxService>();
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 var app = builder.Build();
 
