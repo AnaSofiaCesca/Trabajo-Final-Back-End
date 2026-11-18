@@ -1,4 +1,3 @@
-
 using System.ComponentModel.DataAnnotations;
 
 namespace TpFinal.BL.DTOs;
@@ -32,4 +31,6 @@ public class PacienteDTO
 
     [StringLength(100)]
     public string? ObraSocial { get; set; }
+
+    public string NombreCompleto => $"{Apellido}, {Nombre}";
 }

@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using TpFinal.BL.DTOs;
+using TpFinal.BL.Exceptions;
 using TpFinal.BL.Interfaces;
 using TpFinal.Core.Entities;
 using TpFinal.Core.Interfaces;
@@ -36,7 +37,7 @@ public class DoctorService : IDoctorService
     public async Task<DoctorDTO> CreateAsync(DoctorDTO dto)
     {
         if (await _unitOfWork.Doctores.ExistsMatriculaAsync(dto.Matricula))
-            throw new InvalidOperationException("Ya existe un doctor con esa matrícula.");
+            throw new BusinessException("Ya existe un doctor con esa matrícula.");
 
         var doctor = _mapper.Map<Doctor>(dto);
         doctor.Id = 0;
@@ -55,7 +56,7 @@ public class DoctorService : IDoctorService
             return false;
 
         if (await _unitOfWork.Doctores.ExistsMatriculaAsync(dto.Matricula, id))
-            throw new InvalidOperationException("Ya existe otro doctor con esa matrícula.");
+            throw new BusinessException("Ya existe otro doctor con esa matrícula.");
 
         _mapper.Map(dto, doctor);
         doctor.Id = id;
@@ -74,7 +75,7 @@ public class DoctorService : IDoctorService
             return false;
 
         if (await _unitOfWork.Doctores.HasTurnosAsync(id))
-            throw new InvalidOperationException("No se puede eliminar el doctor porque tiene turnos asociados.");
+            throw new BusinessException("No se puede eliminar el doctor porque tiene turnos asociados.");
 
         _unitOfWork.Doctores.Delete(doctor);
         await _unitOfWork.SaveChangesAsync();
