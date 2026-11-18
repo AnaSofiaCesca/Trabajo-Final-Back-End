@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TpFinal.BL.DTOs;
+using TpFinal.BL.Exceptions;
 using TpFinal.BL.Interfaces;
 
 namespace TpFinal.Web.Controllers;
@@ -52,7 +53,7 @@ public class DoctoresController : Controller
 
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (BusinessException ex)
         {
             ModelState.AddModelError("Matricula", ex.Message);
             return View(dto);
@@ -92,7 +93,7 @@ public class DoctoresController : Controller
 
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (BusinessException ex)
         {
             ModelState.AddModelError("Matricula", ex.Message);
             return View(dto);
@@ -124,7 +125,7 @@ public class DoctoresController : Controller
 
             TempData["Mensaje"] = "Doctor eliminado correctamente.";
         }
-        catch (InvalidOperationException ex)
+        catch (BusinessException ex)
         {
             TempData["Error"] = ex.Message;
         }
