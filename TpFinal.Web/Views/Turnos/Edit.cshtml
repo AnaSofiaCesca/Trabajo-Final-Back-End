@@ -1,0 +1,62 @@
+@model TurnoDTO
+
+@{
+    ViewData["Title"] = "Editar Turno";
+}
+
+<h2>Editar Turno</h2>
+<p class="text-muted">Modificar fecha, profesional o motivo del turno</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PacienteId" />
+
+            <div class="mb-3">
+                <label class="form-label">Paciente</label>
+                <p class="form-control-plaintext fw-semibold mb-1">
+                    @Model.PacienteNombreCompleto - DNI @Model.PacienteDni
+                </p>
+                <a asp-controller="Pacientes" asp-action="Edit" asp-route-id="@Model.PacienteId" class="btn btn-sm btn-outline-secondary">
+                    Editar datos del paciente
+                </a>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FechaHora" class="form-label">Fecha y hora</label>
+                <input asp-for="FechaHora" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@(Model.FechaHora >= DateTime.Now ? DateTime.Now.ToString("yyyy-MM-ddTHH:mm") : null)" step="900" class="form-control" />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DoctorId" class="form-label">Profesional</label>
+                <select asp-for="DoctorId" asp-items="ViewBag.Doctores" class="form-select">
+                    <option value="0">-- Seleccione un doctor --</option>
+                </select>
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Motivo" class="form-label">Motivo</label>
+                <input asp-for="Motivo" class="form-control" />
+                <span asp-validation-for="Motivo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Observaciones" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

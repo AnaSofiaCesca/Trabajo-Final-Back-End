@@ -26,4 +26,9 @@ public class PacienteRepository : Repository<Paciente>, IPacienteRepository
     {
         return await _context.Turnos.AnyAsync(t => t.PacienteId == pacienteId);
     }
+
+    public async Task<Paciente?> GetByDniAsync(string dni)
+    {
+        return await _dbSet.FirstOrDefaultAsync(p => p.Dni == dni);
+    }
 }

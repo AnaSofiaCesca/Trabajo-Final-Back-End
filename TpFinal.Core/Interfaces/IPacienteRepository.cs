@@ -6,4 +6,5 @@ public interface IPacienteRepository : IRepository<Paciente>
 {
     Task<bool> ExistsDniAsync(string dni, int? excludeId = null);
     Task<bool> HasTurnosAsync(int pacienteId);
+    Task<Paciente?> GetByDniAsync(string dni);
 }
