@@ -1,0 +1,47 @@
+@model DoctorDTO
+
+@{
+    ViewData["Title"] = "Detalle del Doctor";
+}
+
+<h2 class="mb-4">Información del Doctor</h2>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        Datos personales y profesionales
+    </div>
+
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Apellido</dt>
+            <dd class="col-sm-9">@Model.Apellido</dd>
+
+            <dt class="col-sm-3">Matrícula</dt>
+            <dd class="col-sm-9">@Model.Matricula</dd>
+
+            <dt class="col-sm-3">Especialidad</dt>
+            <dd class="col-sm-9">@Model.Especialidad</dd>
+
+            <dt class="col-sm-3">Teléfono</dt>
+            <dd class="col-sm-9">@(Model.Telefono ?? "No informado")</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@(Model.Email ?? "No informado")</dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-warning">
+            Editar
+        </a>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Volver al listado
+        </a>
+    </div>
+</div>
