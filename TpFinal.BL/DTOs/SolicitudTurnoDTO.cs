@@ -18,8 +18,8 @@ public class SolicitudTurnoDTO
     public string Dni { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
-    [DataType(DataType.Date)]
-    public DateTime? FechaNacimiento { get; set; }
+    [RegularExpression(@"^\d{2}/\d{2}/\d{4}$", ErrorMessage = "Ingrese la fecha con el formato dd/mm/aaaa")]
+    public string FechaNacimiento { get; set; } = string.Empty;
 
     [StringLength(30)]
     public string? Telefono { get; set; }
@@ -35,9 +35,11 @@ public class SolicitudTurnoDTO
     [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un doctor")]
     public int DoctorId { get; set; }
 
-    [Required(ErrorMessage = "La fecha y hora son obligatorias")]
-    [DataType(DataType.DateTime)]
-    public DateTime FechaHora { get; set; }
+    [Required(ErrorMessage = "Debe seleccionar un día")]
+    public string? Fecha { get; set; }
+
+    [Required(ErrorMessage = "Debe seleccionar un horario")]
+    public string? Hora { get; set; }
 
     [StringLength(250, ErrorMessage = "El motivo no puede superar los 250 caracteres")]
     public string? Motivo { get; set; }

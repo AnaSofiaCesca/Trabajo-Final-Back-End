@@ -1,4 +1,15 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+// Fecha con formato dd/mm/aaaa: agrega las barras mientras se escribe
+document.querySelectorAll('input[data-mascara-fecha]').forEach(function (input) {
+    input.addEventListener('input', function () {
+        var numeros = input.value.replace(/\D/g, '').substring(0, 8);
+        var resultado = numeros;
 
-// Write your JavaScript code.
+        if (numeros.length > 4) {
+            resultado = numeros.substring(0, 2) + '/' + numeros.substring(2, 4) + '/' + numeros.substring(4);
+        } else if (numeros.length > 2) {
+            resultado = numeros.substring(0, 2) + '/' + numeros.substring(2);
+        }
+
+        input.value = resultado;
+    });
+});

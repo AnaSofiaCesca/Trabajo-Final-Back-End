@@ -5,7 +5,7 @@
 }
 
 <h2>Editar Turno</h2>
-<p class="text-muted">Modificar fecha, profesional o motivo del turno</p>
+<p class="text-muted">Modificar día, horario, profesional o motivo del turno</p>
 
 <div class="card shadow-sm">
     <div class="card-body">
@@ -25,10 +25,21 @@
                 </a>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="FechaHora" class="form-label">Fecha y hora</label>
-                <input asp-for="FechaHora" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@(Model.FechaHora >= DateTime.Now ? DateTime.Now.ToString("yyyy-MM-ddTHH:mm") : null)" step="900" class="form-control" />
-                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Fecha" class="form-label">Día (lunes a viernes)</label>
+                    <select asp-for="Fecha" asp-items="ViewBag.Dias" class="form-select">
+                        <option value="">-- Día --</option>
+                    </select>
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Hora" class="form-label">Horario</label>
+                    <select asp-for="Hora" asp-items="ViewBag.Horarios" class="form-select">
+                        <option value="">-- Horario --</option>
+                    </select>
+                    <span asp-validation-for="Hora" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="mb-3">

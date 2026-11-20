@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label asp-for="FechaNacimiento" class="form-label">Fecha de nacimiento</label>
-                    <input asp-for="FechaNacimiento" max="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
+                    <input asp-for="FechaNacimiento" class="form-control" placeholder="dd/mm/aaaa" inputmode="numeric" maxlength="10" data-mascara-fecha />
                     <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -57,17 +57,26 @@
         <div class="card-header">Datos del turno</div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-5 mb-3">
                     <label asp-for="DoctorId" class="form-label">Profesional</label>
                     <select asp-for="DoctorId" asp-items="ViewBag.Doctores" class="form-select">
                         <option value="0">-- Seleccione un doctor --</option>
                     </select>
                     <span asp-validation-for="DoctorId" class="text-danger"></span>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="FechaHora" class="form-label">Fecha y hora</label>
-                    <input asp-for="FechaHora" asp-format="{0:yyyy-MM-ddTHH:mm}" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" step="900" class="form-control" />
-                    <span asp-validation-for="FechaHora" class="text-danger"></span>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Fecha" class="form-label">Día (lunes a viernes)</label>
+                    <select asp-for="Fecha" asp-items="ViewBag.Dias" class="form-select">
+                        <option value="">-- Día --</option>
+                    </select>
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label asp-for="Hora" class="form-label">Horario</label>
+                    <select asp-for="Hora" asp-items="ViewBag.Horarios" class="form-select">
+                        <option value="">-- Horario --</option>
+                    </select>
+                    <span asp-validation-for="Hora" class="text-danger"></span>
                 </div>
                 <div class="col-12 mb-3">
                     <label asp-for="Motivo" class="form-label">Motivo de la consulta</label>

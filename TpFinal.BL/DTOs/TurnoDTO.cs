@@ -7,11 +7,16 @@ public class TurnoDTO
 {
     public int Id { get; set; }
 
-    [Required(ErrorMessage = "La fecha y hora son obligatorias")]
-    [DataType(DataType.DateTime)]
+    // Fecha y hora completas (para mostrar)
     public DateTime FechaHora { get; set; }
 
-    [Required(ErrorMessage = "El estado es obligatorio")]
+    // Día y horario por separado (para el formulario de edición)
+    [Required(ErrorMessage = "Debe seleccionar un día")]
+    public string? Fecha { get; set; }
+
+    [Required(ErrorMessage = "Debe seleccionar un horario")]
+    public string? Hora { get; set; }
+
     public EstadoTurno Estado { get; set; } = EstadoTurno.Pendiente;
 
     [StringLength(250, ErrorMessage = "El motivo no puede superar los 250 caracteres")]

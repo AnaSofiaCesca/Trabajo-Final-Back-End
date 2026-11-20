@@ -1,7 +1,9 @@
+using System.Globalization;
 using AutoMapper;
 using TpFinal.BL.DTOs;
 using TpFinal.BL.Exceptions;
 using TpFinal.BL.Interfaces;
+using TpFinal.BL.Rules;
 using TpFinal.Core.Entities;
 using TpFinal.Core.Enums;
 using TpFinal.Core.Interfaces;
@@ -36,16 +38,16 @@ public class TurnoService : ITurnoService
 
     public async Task<TurnoDTO> SolicitarAsync(SolicitudTurnoDTO dto)
     {
+        var fechaHora = ArmarFechaHora(dto.Fecha, dto.Hora);
+        var fechaNacimiento = ConvertirFechaNacimiento(dto.FechaNacimiento);
+
         if (await _unitOfWork.Doctores.GetByIdAsync(dto.DoctorId) == null)
             throw new BusinessException("El doctor seleccionado no existe.");
 
-        if (dto.FechaHora < DateTime.Now)
+        if (fechaHora < DateTime.Now)
             throw new BusinessException("No se puede solicitar un turno en una fecha y hora pasada.");
 
-        if (dto.FechaNacimiento > DateTime.Today)
-            throw new BusinessException("La fecha de nacimiento no puede ser futura.");
-
-        if (await _unitOfWork.Turnos.IsDoctorBusyAsync(dto.DoctorId, dto.FechaHora))
+        if (await _unitOfWork.Turnos.IsDoctorBusyAsync(dto.DoctorId, fechaHora))
             throw new BusinessException("El doctor ya tiene un turno asignado en ese horario. Elija otro horario.");
 
         // Busca al paciente por DNI: si no existe lo crea, si existe lo reutiliza
@@ -58,7 +60,7 @@ public class TurnoService : ITurnoService
                 Nombre = dto.Nombre.Trim(),
                 Apellido = dto.Apellido.Trim(),
                 Dni = dto.Dni.Trim(),
-                FechaNacimiento = dto.FechaNacimiento!.Value,
+                FechaNacimiento = fechaNacimiento,
                 Telefono = dto.Telefono,
                 Email = dto.Email,
                 ObraSocial = dto.ObraSocial
@@ -69,13 +71,13 @@ public class TurnoService : ITurnoService
         else
         {
             // Paciente existente: sus datos no se modifican (se corrigen desde Administración > Pacientes)
-            if (await _unitOfWork.Turnos.IsPacienteBusyAsync(paciente.Id, dto.FechaHora))
+            if (await _unitOfWork.Turnos.IsPacienteBusyAsync(paciente.Id, fechaHora))
                 throw new BusinessException("Ya tiene un turno solicitado en ese horario.");
         }
 
         var turno = new Turno
         {
-            FechaHora = dto.FechaHora,
+            FechaHora = fechaHora,
             DoctorId = dto.DoctorId,
             Paciente = paciente,
             Motivo = dto.Motivo,
@@ -97,20 +99,22 @@ public class TurnoService : ITurnoService
         if (turno == null)
             return false;
 
+        var fechaHora = ArmarFechaHora(dto.Fecha, dto.Hora);
+
         if (await _unitOfWork.Doctores.GetByIdAsync(dto.DoctorId) == null)
             throw new BusinessException("El doctor seleccionado no existe.");
 
-        if (dto.FechaHora != turno.FechaHora && dto.FechaHora < DateTime.Now)
+        if (fechaHora != turno.FechaHora && fechaHora < DateTime.Now)
             throw new BusinessException("No se puede mover un turno a una fecha y hora pasada.");
 
-        if (await _unitOfWork.Turnos.IsDoctorBusyAsync(dto.DoctorId, dto.FechaHora, id))
+        if (await _unitOfWork.Turnos.IsDoctorBusyAsync(dto.DoctorId, fechaHora, id))
             throw new BusinessException("El doctor ya tiene un turno asignado en ese horario.");
 
-        if (await _unitOfWork.Turnos.IsPacienteBusyAsync(turno.PacienteId, dto.FechaHora, id))
+        if (await _unitOfWork.Turnos.IsPacienteBusyAsync(turno.PacienteId, fechaHora, id))
             throw new BusinessException("El paciente ya tiene un turno asignado en ese horario.");
 
         // Solo se modifican los datos del turno: el paciente y el estado no cambian
-        turno.FechaHora = dto.FechaHora;
+        turno.FechaHora = fechaHora;
         turno.DoctorId = dto.DoctorId;
         turno.Motivo = dto.Motivo;
         turno.Observaciones = dto.Observaciones;
@@ -132,5 +136,38 @@ public class TurnoService : ITurnoService
         await _unitOfWork.SaveChangesAsync();
 
         return true;
+    }
+
+    // Une día y horario validando las reglas de atención del consultorio
+    private static DateTime ArmarFechaHora(string? fecha, string? hora)
+    {
+        if (!DateTime.TryParseExact(fecha, HorarioAtencion.FormatoFecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dia))
+            throw new BusinessException("Seleccione un día válido.");
+
+        if (!HorarioAtencion.EsDiaHabil(dia))
+            throw new BusinessException("Los turnos solo se pueden solicitar de lunes a viernes.");
+
+        if (dia > DateTime.Today.AddDays(HorarioAtencion.DiasAgenda))
+            throw new BusinessException($"Solo se pueden solicitar turnos dentro de los próximos {HorarioAtencion.DiasAgenda} días.");
+
+        if (!HorarioAtencion.EsHorarioValido(hora))
+            throw new BusinessException("Seleccione un horario dentro del horario de atención.");
+
+        return dia.Add(TimeSpan.Parse(hora!));
+    }
+
+    // Convierte el texto dd/mm/aaaa en fecha y valida que sea real y razonable
+    private static DateTime ConvertirFechaNacimiento(string texto)
+    {
+        if (!DateTime.TryParseExact(texto, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var fecha))
+            throw new BusinessException("La fecha de nacimiento no es válida.");
+
+        if (fecha > DateTime.Today)
+            throw new BusinessException("La fecha de nacimiento no puede ser futura.");
+
+        if (fecha < DateTime.Today.AddYears(-120))
+            throw new BusinessException("La fecha de nacimiento no es válida.");
+
+        return fecha;
     }
 }
