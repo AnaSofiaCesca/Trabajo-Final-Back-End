@@ -1,0 +1,96 @@
+@model SolicitudTurnoDTO
+
+@{
+    ViewData["Title"] = "Solicitar Turno";
+}
+
+<h2>Solicitar Turno</h2>
+<p class="text-muted">Complete sus datos y elija el profesional, el día y el horario</p>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">Datos del paciente</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Nombre" class="form-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Apellido" class="form-label">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Dni" class="form-label">DNI (sin puntos)</label>
+                    <input asp-for="Dni" class="form-control" inputmode="numeric" maxlength="8" />
+                    <span asp-validation-for="Dni" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                    <input asp-for="FechaNacimiento" class="form-control" placeholder="dd/mm/aaaa" inputmode="numeric" maxlength="10" data-mascara-fecha />
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Telefono" class="form-label">Teléfono</label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="ObraSocial" class="form-label">Obra social</label>
+                    <input asp-for="ObraSocial" class="form-control" placeholder="Ej.: OSDE o Particular" />
+                    <span asp-validation-for="ObraSocial" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">Datos del turno</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-5 mb-3">
+                    <label asp-for="DoctorId" class="form-label">Profesional</label>
+                    <select asp-for="DoctorId" asp-items="ViewBag.Doctores" class="form-select">
+                        <option value="0">-- Seleccione un doctor --</option>
+                    </select>
+                    <span asp-validation-for="DoctorId" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Fecha" class="form-label">Día (lunes a viernes)</label>
+                    <select asp-for="Fecha" asp-items="ViewBag.Dias" class="form-select">
+                        <option value="">-- Día --</option>
+                    </select>
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label asp-for="Hora" class="form-label">Horario</label>
+                    <select asp-for="Hora" asp-items="ViewBag.Horarios" class="form-select">
+                        <option value="">-- Horario --</option>
+                    </select>
+                    <span asp-validation-for="Hora" class="text-danger"></span>
+                </div>
+                <div class="col-12 mb-3">
+                    <label asp-for="Motivo" class="form-label">Motivo de la consulta</label>
+                    <input asp-for="Motivo" class="form-control" />
+                    <span asp-validation-for="Motivo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Solicitar turno</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
