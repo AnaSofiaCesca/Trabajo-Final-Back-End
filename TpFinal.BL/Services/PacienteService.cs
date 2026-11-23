@@ -1,10 +1,9 @@
-
 using AutoMapper;
 using TpFinal.BL.DTOs;
 using TpFinal.BL.Exceptions;
-using TpFinal.BL.Interfaces;
 using TpFinal.Core.Entities;
 using TpFinal.Core.Interfaces;
+using TpFinal.BL.Interfaces;
 
 namespace TpFinal.BL.Services;
 
@@ -22,6 +21,7 @@ public class PacienteService : IPacienteService
     public async Task<IEnumerable<PacienteDTO>> GetAllAsync()
     {
         var pacientes = await _unitOfWork.Pacientes.GetAllAsync();
+
         return _mapper.Map<IEnumerable<PacienteDTO>>(pacientes);
     }
 
@@ -29,15 +29,26 @@ public class PacienteService : IPacienteService
     {
         var paciente = await _unitOfWork.Pacientes.GetByIdAsync(id);
 
-        return paciente == null
-            ? null
-            : _mapper.Map<PacienteDTO>(paciente);
+        if (paciente == null)
+        {
+            return null;
+        }
+
+        return _mapper.Map<PacienteDTO>(paciente);
     }
 
     public async Task<PacienteDTO> CreateAsync(PacienteDTO dto)
     {
-        if (await _unitOfWork.Pacientes.ExistsDniAsync(dto.Dni))
-            throw new BusinessException("Ya existe un paciente con ese DNI.");
+        ValidarFechaNacimiento(dto.FechaNacimiento);
+
+        var dniExiste = await _unitOfWork.Pacientes
+            .ExistsDniAsync(dto.Dni);
+
+        if (dniExiste)
+        {
+            throw new BusinessException(
+                "Ya existe un paciente registrado con ese DNI.");
+        }
 
         var paciente = _mapper.Map<Paciente>(dto);
         paciente.Id = 0;
@@ -50,13 +61,23 @@ public class PacienteService : IPacienteService
 
     public async Task<bool> UpdateAsync(int id, PacienteDTO dto)
     {
+        ValidarFechaNacimiento(dto.FechaNacimiento);
+
         var paciente = await _unitOfWork.Pacientes.GetByIdAsync(id);
 
         if (paciente == null)
+        {
             return false;
+        }
 
-        if (await _unitOfWork.Pacientes.ExistsDniAsync(dto.Dni, id))
-            throw new BusinessException("Ya existe otro paciente con ese DNI.");
+        var dniExiste = await _unitOfWork.Pacientes
+            .ExistsDniAsync(dto.Dni, id);
+
+        if (dniExiste)
+        {
+            throw new BusinessException(
+                "Ya existe otro paciente registrado con ese DNI.");
+        }
 
         _mapper.Map(dto, paciente);
         paciente.Id = id;
@@ -72,14 +93,34 @@ public class PacienteService : IPacienteService
         var paciente = await _unitOfWork.Pacientes.GetByIdAsync(id);
 
         if (paciente == null)
+        {
             return false;
+        }
 
-        if (await _unitOfWork.Pacientes.HasTurnosAsync(id))
-            throw new BusinessException("No se puede eliminar el paciente porque tiene turnos asociados.");
+        var tieneTurnos = await _unitOfWork.Pacientes
+            .HasTurnosAsync(id);
+
+        if (tieneTurnos)
+        {
+            throw new BusinessException(
+                "No se puede eliminar el paciente porque tiene turnos asociados.");
+        }
 
         _unitOfWork.Pacientes.Delete(paciente);
         await _unitOfWork.SaveChangesAsync();
 
         return true;
+    }
+
+    private static void ValidarFechaNacimiento(DateTime fechaNacimiento)
+    {
+        var hoy = DateTime.Today;
+        var fechaMinima = hoy.AddYears(-120);
+
+        if (fechaNacimiento.Date > hoy || fechaNacimiento.Date < fechaMinima)
+        {
+            throw new BusinessException(
+                "La fecha de nacimiento no es válida.");
+        }
     }
 }
