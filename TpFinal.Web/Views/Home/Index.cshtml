@@ -1,8 +1,68 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Turnero Médico</h1>
+        <p class="lead text-muted">
+            Sistema de gestión y solicitud de turnos médicos.
+        </p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        <div class="col-12 col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h4 card-title">Solicitar turno</h2>
+
+                    <p class="card-text">
+                        ¿Necesitás atención médica? Podés solicitar un turno
+                        seleccionando el doctor y el horario disponible.
+                    </p>
+
+                    <div class="mt-auto">
+                        <a class="btn btn-primary"
+                           asp-controller="Turnos"
+                           asp-action="Create">
+                            Solicitar turno
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h4 card-title">Administración</h2>
+
+                    <p class="card-text">
+                        Acceso para el consultorio a la gestión de doctores,
+                        pacientes y turnos.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2 mt-auto">
+                        <a class="btn btn-outline-primary"
+                           asp-controller="Doctores"
+                           asp-action="Index">
+                            Doctores
+                        </a>
+
+                        <a class="btn btn-outline-primary"
+                           asp-controller="Pacientes"
+                           asp-action="Index">
+                            Pacientes
+                        </a>
+
+                        <a class="btn btn-outline-primary"
+                           asp-controller="Turnos"
+                           asp-action="Index">
+                            Turnos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

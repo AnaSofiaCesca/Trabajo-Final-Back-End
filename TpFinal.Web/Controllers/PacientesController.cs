@@ -14,123 +14,139 @@ public class PacientesController : Controller
         _pacienteService = pacienteService;
     }
 
-    // GET: Pacientes
     public async Task<IActionResult> Index()
     {
         var pacientes = await _pacienteService.GetAllAsync();
+
         return View(pacientes);
     }
 
-    // GET: Pacientes/Details/5
     public async Task<IActionResult> Details(int id)
     {
         var paciente = await _pacienteService.GetByIdAsync(id);
 
         if (paciente == null)
+        {
             return NotFound();
+        }
 
         return View(paciente);
     }
 
-    // GET: Pacientes/Create
+    [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        return View(new PacienteDTO());
     }
 
-    // POST: Pacientes/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(PacienteDTO dto)
     {
         if (!ModelState.IsValid)
+        {
             return View(dto);
+        }
 
         try
         {
             await _pacienteService.CreateAsync(dto);
 
-            TempData["Mensaje"] = "Paciente registrado correctamente.";
+            TempData["Mensaje"] = "El paciente se creó correctamente.";
 
             return RedirectToAction(nameof(Index));
         }
         catch (BusinessException ex)
         {
-            ModelState.AddModelError("Dni", ex.Message);
+            ModelState.AddModelError(string.Empty, ex.Message);
+
             return View(dto);
         }
     }
 
-    // GET: Pacientes/Edit/5
+    [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var paciente = await _pacienteService.GetByIdAsync(id);
 
         if (paciente == null)
+        {
             return NotFound();
+        }
 
         return View(paciente);
     }
 
-    // POST: Pacientes/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, PacienteDTO dto)
     {
         if (id != dto.Id)
+        {
             return BadRequest();
+        }
 
         if (!ModelState.IsValid)
+        {
             return View(dto);
+        }
 
         try
         {
             var actualizado = await _pacienteService.UpdateAsync(id, dto);
 
             if (!actualizado)
+            {
                 return NotFound();
+            }
 
-            TempData["Mensaje"] = "Paciente actualizado correctamente.";
+            TempData["Mensaje"] = "El paciente se actualizó correctamente.";
 
             return RedirectToAction(nameof(Index));
         }
         catch (BusinessException ex)
         {
-            ModelState.AddModelError("Dni", ex.Message);
+            ModelState.AddModelError(string.Empty, ex.Message);
+
             return View(dto);
         }
     }
 
-    // GET: Pacientes/Delete/5
+    [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
         var paciente = await _pacienteService.GetByIdAsync(id);
 
         if (paciente == null)
+        {
             return NotFound();
+        }
 
         return View(paciente);
     }
 
-    // POST: Pacientes/Delete/5
-    [HttpPost, ActionName("Delete")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> Delete(PacienteDTO dto)
     {
         try
         {
-            var eliminado = await _pacienteService.DeleteAsync(id);
+            var eliminado = await _pacienteService.DeleteAsync(dto.Id);
 
             if (!eliminado)
+            {
                 return NotFound();
+            }
 
-            TempData["Mensaje"] = "Paciente eliminado correctamente.";
+            TempData["Mensaje"] = "El paciente se eliminó correctamente.";
+
+            return RedirectToAction(nameof(Index));
         }
         catch (BusinessException ex)
         {
             TempData["Error"] = ex.Message;
-        }
 
-        return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
