@@ -27,7 +27,7 @@ public class PacienteDTO
     [Display(Name = "Fecha de nacimiento")]
     [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
     [DataType(DataType.Date)]
-    public DateTime FechaNacimiento { get; set; }
+    public DateTime? FechaNacimiento { get; set; }
 
     [Display(Name = "Teléfono")]
     [StringLength(30)]
@@ -43,5 +43,5 @@ public class PacienteDTO
     public string? ObraSocial { get; set; }
 
     [Display(Name = "Nombre completo")]
-    public string NombreCompleto => $"{Nombre} {Apellido}";
+    public string NombreCompleto => $"{Apellido}, {Nombre}";
 }

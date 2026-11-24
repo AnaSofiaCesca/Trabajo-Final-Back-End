@@ -112,12 +112,12 @@ public class PacienteService : IPacienteService
         return true;
     }
 
-    private static void ValidarFechaNacimiento(DateTime fechaNacimiento)
+    private static void ValidarFechaNacimiento(DateTime? fechaNacimiento)
     {
         var hoy = DateTime.Today;
         var fechaMinima = hoy.AddYears(-120);
 
-        if (fechaNacimiento.Date > hoy || fechaNacimiento.Date < fechaMinima)
+        if (fechaNacimiento is null || fechaNacimiento.Value.Date > hoy || fechaNacimiento.Value.Date < fechaMinima)
         {
             throw new BusinessException(
                 "La fecha de nacimiento no es válida.");

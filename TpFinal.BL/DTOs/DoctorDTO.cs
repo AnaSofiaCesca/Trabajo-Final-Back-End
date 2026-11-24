@@ -36,5 +36,5 @@ public class DoctorDTO
     public string? Email { get; set; }
 
     [Display(Name = "Nombre completo")]
-    public string NombreCompleto => $"{Nombre} {Apellido}";
+    public string NombreCompleto => $"{Apellido}, {Nombre}";
 }
