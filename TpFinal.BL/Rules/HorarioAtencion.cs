@@ -13,7 +13,6 @@ public static class HorarioAtencion
         return fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday;
     }
 
-    // Días hábiles desde hoy hasta el final de la agenda
     public static IEnumerable<DateTime> ObtenerDiasHabiles()
     {
         var hasta = DateTime.Today.AddDays(DiasAgenda);
