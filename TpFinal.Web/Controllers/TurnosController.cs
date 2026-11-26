@@ -148,14 +148,22 @@ public class TurnosController : Controller
     // Carga los desplegables de doctores, días hábiles y horarios
     private async Task CargarDatosFormularioAsync(string? fechaActual = null)
     {
-        ViewBag.Doctores = new SelectList(await _doctorService.GetAllAsync(), "Id", "NombreCompleto");
+        ViewBag.Doctores = new SelectList(
+            (await _doctorService.GetAllAsync())
+                .OrderBy(d => d.Especialidad)
+                .ThenBy(d => d.Apellido),
+             "Id",
+             "NombreCompleto",
+              null,
+             "Especialidad");
+
         ViewBag.Horarios = new SelectList(HorarioAtencion.ObtenerHorarios());
 
         var dias = HorarioAtencion.ObtenerDiasHabiles()
             .Select(d => new SelectListItem(TextoDia(d), d.ToString(HorarioAtencion.FormatoFecha)))
             .ToList();
 
-        // Al editar, si el turno tiene un día fuera de la agenda (por ejemplo, uno pasado), se agrega para no perderlo
+       
         if (fechaActual != null
             && dias.All(d => d.Value != fechaActual)
             && DateTime.TryParseExact(fechaActual, HorarioAtencion.FormatoFecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out var fecha))
@@ -166,7 +174,7 @@ public class TurnosController : Controller
         ViewBag.Dias = dias;
     }
 
-    // Ejemplo: "Lunes 23/11/2026"
+    
     private static string TextoDia(DateTime fecha)
     {
         return CulturaAr.TextInfo.ToTitleCase(fecha.ToString("dddd dd/MM/yyyy", CulturaAr));

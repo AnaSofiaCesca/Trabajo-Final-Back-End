@@ -37,7 +37,11 @@
 
                 <div class="col-md-6 mb-3">
                     <label asp-for="Especialidad" class="form-label"></label>
-                    <input asp-for="Especialidad" class="form-control" />
+                    <select asp-for="Especialidad"
+                            asp-items="ViewBag.Especialidades"
+                            class="form-select">
+                        <option value="">-- Seleccione una especialidad --</option>
+                    </select>
                     <span asp-validation-for="Especialidad"
                           class="text-danger"></span>
                 </div>
