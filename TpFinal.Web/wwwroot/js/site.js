@@ -14,8 +14,7 @@ document.querySelectorAll('input[data-mascara-fecha]').forEach(function (input) 
     });
 });
 
-// Especialidad -> filtra el desplegable de doctores.
-// Usa los grupos <optgroup> que arma el controller (un grupo por especialidad).
+// Filtra los doctores según la especialidad elegida
 document.querySelectorAll('select[data-filtra-doctores]').forEach(function (selectEspecialidad) {
     var selectDoctor = document.getElementById(selectEspecialidad.dataset.filtraDoctores);
 
@@ -26,7 +25,6 @@ document.querySelectorAll('select[data-filtra-doctores]').forEach(function (sele
     var opcionVacia = selectDoctor.querySelector('option[value="0"]');
     var grupos = Array.from(selectDoctor.querySelectorAll('optgroup'));
 
-    // Carga las especialidades a partir de los grupos de doctores
     grupos.forEach(function (grupo) {
         selectEspecialidad.add(new Option(grupo.label, grupo.label));
     });
