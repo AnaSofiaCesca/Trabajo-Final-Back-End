@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TpFinal.BL.DTOs;
 using TpFinal.BL.Exceptions;
 using TpFinal.BL.Interfaces;
+using TpFinal.BL.Rules;
 
 namespace TpFinal.Web.Controllers;
 
@@ -36,6 +38,8 @@ public class DoctoresController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        CargarEspecialidades();
+
         return View(new DoctorDTO());
     }
 
@@ -45,6 +49,8 @@ public class DoctoresController : Controller
     {
         if (!ModelState.IsValid)
         {
+            CargarEspecialidades();
+
             return View(dto);
         }
 
@@ -60,6 +66,8 @@ public class DoctoresController : Controller
         {
             ModelState.AddModelError(string.Empty, ex.Message);
 
+            CargarEspecialidades();
+
             return View(dto);
         }
     }
@@ -73,6 +81,8 @@ public class DoctoresController : Controller
         {
             return NotFound();
         }
+
+        CargarEspecialidades();
 
         return View(doctor);
     }
@@ -88,6 +98,8 @@ public class DoctoresController : Controller
 
         if (!ModelState.IsValid)
         {
+            CargarEspecialidades();
+
             return View(dto);
         }
 
@@ -107,6 +119,8 @@ public class DoctoresController : Controller
         catch (BusinessException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
+
+            CargarEspecialidades();
 
             return View(dto);
         }
@@ -148,5 +162,10 @@ public class DoctoresController : Controller
 
             return RedirectToAction(nameof(Index));
         }
+    }
+
+    private void CargarEspecialidades()
+    {
+        ViewBag.Especialidades = new SelectList(Especialidades.Lista);
     }
 }

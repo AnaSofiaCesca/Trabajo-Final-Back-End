@@ -3,6 +3,7 @@ using AutoMapper;
 using TpFinal.BL.DTOs;
 using TpFinal.BL.Exceptions;
 using TpFinal.BL.Interfaces;
+using TpFinal.BL.Rules;
 using TpFinal.Core.Entities;
 using TpFinal.Core.Interfaces;
 
@@ -36,6 +37,8 @@ public class DoctorService : IDoctorService
 
     public async Task<DoctorDTO> CreateAsync(DoctorDTO dto)
     {
+        ValidarEspecialidad(dto.Especialidad);
+
         if (await _unitOfWork.Doctores.ExistsMatriculaAsync(dto.Matricula))
             throw new BusinessException("Ya existe un doctor con esa matrícula.");
 
@@ -50,6 +53,8 @@ public class DoctorService : IDoctorService
 
     public async Task<bool> UpdateAsync(int id, DoctorDTO dto)
     {
+        ValidarEspecialidad(dto.Especialidad);
+
         var doctor = await _unitOfWork.Doctores.GetByIdAsync(id);
 
         if (doctor == null)
@@ -81,5 +86,14 @@ public class DoctorService : IDoctorService
         await _unitOfWork.SaveChangesAsync();
 
         return true;
+    }
+
+    private static void ValidarEspecialidad(string especialidad)
+    {
+        if (!Especialidades.EsValida(especialidad))
+        {
+            throw new BusinessException(
+                "La especialidad seleccionada no es válida.");
+        }
     }
 }

@@ -5,7 +5,7 @@
 }
 
 <h2>Solicitar Turno</h2>
-<p class="text-muted">Complete sus datos y elija el profesional, el día y el horario</p>
+<p class="text-muted">Complete sus datos y elija la especialidad, el profesional, el día y el horario</p>
 
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -57,21 +57,27 @@
         <div class="card-header">Datos del turno</div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-5 mb-3">
+                <div class="col-md-6 mb-3">
+                    <label for="Especialidad" class="form-label">Especialidad</label>
+                    <select id="Especialidad" class="form-select" data-filtra-doctores="DoctorId">
+                        <option value="">-- Seleccione una especialidad --</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
                     <label asp-for="DoctorId" class="form-label">Profesional</label>
                     <select asp-for="DoctorId" asp-items="ViewBag.Doctores" class="form-select">
                         <option value="0">-- Seleccione un doctor --</option>
                     </select>
                     <span asp-validation-for="DoctorId" class="text-danger"></span>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <label asp-for="Fecha" class="form-label">Día (lunes a viernes)</label>
                     <select asp-for="Fecha" asp-items="ViewBag.Dias" class="form-select">
                         <option value="">-- Día --</option>
                     </select>
                     <span asp-validation-for="Fecha" class="text-danger"></span>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-6 mb-3">
                     <label asp-for="Hora" class="form-label">Horario</label>
                     <select asp-for="Hora" asp-items="ViewBag.Horarios" class="form-select">
                         <option value="">-- Horario --</option>

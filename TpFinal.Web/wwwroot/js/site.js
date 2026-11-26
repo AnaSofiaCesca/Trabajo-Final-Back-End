@@ -13,3 +13,54 @@ document.querySelectorAll('input[data-mascara-fecha]').forEach(function (input) 
         input.value = resultado;
     });
 });
+
+// Especialidad -> filtra el desplegable de doctores.
+// Usa los grupos <optgroup> que arma el controller (un grupo por especialidad).
+document.querySelectorAll('select[data-filtra-doctores]').forEach(function (selectEspecialidad) {
+    var selectDoctor = document.getElementById(selectEspecialidad.dataset.filtraDoctores);
+
+    if (!selectDoctor) {
+        return;
+    }
+
+    var opcionVacia = selectDoctor.querySelector('option[value="0"]');
+    var grupos = Array.from(selectDoctor.querySelectorAll('optgroup'));
+
+    // Carga las especialidades a partir de los grupos de doctores
+    grupos.forEach(function (grupo) {
+        selectEspecialidad.add(new Option(grupo.label, grupo.label));
+    });
+
+    // Si ya hay un doctor elegido (por ejemplo, al volver con un error), selecciona su especialidad
+    var doctorElegido = selectDoctor.selectedOptions[0];
+
+    if (doctorElegido && doctorElegido.parentElement.tagName === 'OPTGROUP') {
+        selectEspecialidad.value = doctorElegido.parentElement.label;
+    }
+
+    function filtrarDoctores() {
+        var especialidad = selectEspecialidad.value;
+        var valorAnterior = selectDoctor.value;
+
+        selectDoctor.innerHTML = '';
+
+        if (opcionVacia) {
+            selectDoctor.appendChild(opcionVacia);
+        }
+
+        grupos.forEach(function (grupo) {
+            if (grupo.label === especialidad) {
+                selectDoctor.appendChild(grupo);
+            }
+        });
+
+        selectDoctor.value = valorAnterior;
+
+        if (selectDoctor.value !== valorAnterior) {
+            selectDoctor.value = '0';
+        }
+    }
+
+    filtrarDoctores();
+    selectEspecialidad.addEventListener('change', filtrarDoctores);
+});
