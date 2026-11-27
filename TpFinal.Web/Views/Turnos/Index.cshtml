@@ -73,10 +73,10 @@
                                 <td><span class="badge @claseEstado">@turno.Estado</span></td>
                                 <td>@turno.Motivo</td>
                                 <td>
-                                    <div class="btn-group btn-group-sm">
-                                        <a asp-action="Details" asp-route-id="@turno.Id" class="btn btn-info">Ver</a>
-                                        <a asp-action="Edit" asp-route-id="@turno.Id" class="btn btn-warning">Editar</a>
-                                        <a asp-action="Delete" asp-route-id="@turno.Id" class="btn btn-danger">Eliminar</a>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <a asp-action="Details" asp-route-id="@turno.Id" class="btn btn-sm btn-outline-info">Ver</a>
+                                        <a asp-action="Edit" asp-route-id="@turno.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                        <a asp-action="Delete" asp-route-id="@turno.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
                                     </div>
                                 </td>
                             </tr>
